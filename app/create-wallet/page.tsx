@@ -24,11 +24,14 @@ export default function CreateWallet() {
           : "/api/create-eth-wallet";
 
       const response = await axios.post(`${endpoint}`);
+      console.log(response);
 
       setTimeout(() => {
         if (response.data.success) {
           router.push(
-            `/new-wallet?wallet=${encodeURIComponent(response.data.wallet)}`
+            `/new-wallet?wallet=${encodeURIComponent(
+              JSON.stringify(response.data.wallet)
+            )}`
           );
         } else {
           setErrorMessage(response.data.message || "Error creating wallet");

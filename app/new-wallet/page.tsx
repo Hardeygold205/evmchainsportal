@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,12 +15,23 @@ interface Wallet {
 export default function NewWallet() {
   const searchParams = useSearchParams();
   const walletParam = searchParams.get("wallet");
-  const wallet = walletParam
-    ? (JSON.parse(decodeURIComponent(walletParam)) as Wallet)
-    : undefined;
 
+  const [wallet, setWallet] = useState<Wallet | undefined>(undefined);
   const walletRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (walletParam) {
+      try {
+        const parsedWallet = JSON.parse(
+          decodeURIComponent(walletParam)
+        ) as Wallet;
+        setWallet(parsedWallet);
+      } catch (error) {
+        console.error("Failed to parse wallet:", error);
+      }
+    }
+  }, [walletParam]);
 
   const handleCopy = (value: string, key: string) => {
     navigator.clipboard.writeText(value);
@@ -29,7 +40,7 @@ export default function NewWallet() {
   };
 
   const mnemonicArray = Array.isArray(wallet?.mnemonic)
-    ? wallet.mnemonic
+    ? wallet?.mnemonic
     : wallet?.mnemonic?.split(" ") || [];
 
   return (
@@ -39,10 +50,8 @@ export default function NewWallet() {
       <div>
         <div className="mb-4">
           <Link href="/">
-            <a>
-              <FontAwesomeIcon icon={faLeftLong} />
-              <p className="p-0 text-[0.4rem]">BACK</p>
-            </a>
+            <FontAwesomeIcon icon={faLeftLong} />
+            <p className="p-0 text-[0.4rem]">BACK</p>
           </Link>
         </div>
         {wallet && (
@@ -53,32 +62,26 @@ export default function NewWallet() {
             <div className="space-y-3 border p-5 rounded-lg h-full">
               <h2 className="uppercase font-bold text-2xl">Wallet Details:</h2>
               <div>
-                <p>
-                  <strong>Address:</strong>
-                  <div className="flex break-words">
-                    <h3 className="break-all">{wallet.address}</h3>
-                    <button
-                      onClick={() => handleCopy(wallet.address, "address")}
-                      className="btn btn-sm ml-2">
-                      {copied === "address" ? "Copied!" : "Copy"}
-                    </button>
-                  </div>
-                </p>
+                <strong>Address:</strong>
+                <div className="flex break-words">
+                  <h3 className="break-all">{wallet.address}</h3>
+                  <button
+                    onClick={() => handleCopy(wallet.address, "address")}
+                    className="btn btn-sm ml-2">
+                    {copied === "address" ? "Copied!" : "Copy"}
+                  </button>
+                </div>
               </div>
               <div>
-                <p>
-                  <strong>Private Key:</strong>
-                  <div className="flex break-words">
-                    <h3 className="break-all">{wallet.privateKey}</h3>
-                    <button
-                      onClick={() =>
-                        handleCopy(wallet.privateKey, "privateKey")
-                      }
-                      className="btn btn-sm ml-2">
-                      {copied === "privateKey" ? "Copied!" : "Copy"}
-                    </button>
-                  </div>
-                </p>
+                <strong>Private Key:</strong>
+                <div className="flex break-words">
+                  <h3 className="break-all">{wallet.privateKey}</h3>
+                  <button
+                    onClick={() => handleCopy(wallet.privateKey, "privateKey")}
+                    className="btn btn-sm ml-2">
+                    {copied === "privateKey" ? "Copied!" : "Copy"}
+                  </button>
+                </div>
               </div>
               <div>
                 <strong>Mnemonic:</strong>
