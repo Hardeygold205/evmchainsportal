@@ -2,8 +2,8 @@ import Link from "next/link";
 export default function Home() {
   const buttons = [
     {
-      name: "Import Wallet",
-      link: "/import",
+      name: "Create New Wallet",
+      link: "/create-wallet",
       color: "text-black",
       bgColor: "bg-white",
     },
