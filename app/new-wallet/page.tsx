@@ -2,7 +2,6 @@
 
 import React, { useRef, useState, useEffect } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,14 +12,14 @@ interface Wallet {
 }
 
 export default function NewWallet() {
-  const searchParams = useSearchParams();
-  const walletParam = searchParams.get("wallet");
-
   const [wallet, setWallet] = useState<Wallet | undefined>(undefined);
   const walletRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState<string | null>(null);
 
   useEffect(() => {
+    const queryParams = new URLSearchParams(window.location.search);
+    const walletParam = queryParams.get("wallet");
+
     if (walletParam) {
       try {
         const parsedWallet = JSON.parse(
@@ -31,7 +30,7 @@ export default function NewWallet() {
         console.error("Failed to parse wallet:", error);
       }
     }
-  }, [walletParam]);
+  }, []);
 
   const handleCopy = (value: string, key: string) => {
     navigator.clipboard.writeText(value);
