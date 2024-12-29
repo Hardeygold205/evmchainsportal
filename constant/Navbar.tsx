@@ -27,13 +27,13 @@ export default function Navbar() {
         </div>
         <div className="flex-none">
           {isInputPage ? (
-            <div className="md:btn btn-sm text-gray-300 bg-gray-700 p-1 md:px-5 rounded-lg md:rounded-full md:cursor-not-allowed cursor-not-allowed">
+            <div className="md:btn btn-sm text-gray-300 bg-gray-700 py-1 px-2 md:px-5 rounded-lg md:rounded-full md:cursor-not-allowed cursor-not-allowed">
               Connecting...
             </div>
           ) : (
             <Link
               href="/import"
-              className="md:btn btn-sm md:bg-blue-500 text-white md:text-white bg-blue-500 p-1 md:px-5 rounded-lg md:rounded-full">
+              className="md:btn btn-sm md:bg-blue-500 py-1 px-2 text-white md:text-white bg-blue-500 md:px-5 rounded-lg md:rounded-full">
               Connect Wallet
             </Link>
           )}
