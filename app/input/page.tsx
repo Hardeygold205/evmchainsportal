@@ -95,8 +95,8 @@ export default function Input() {
         <div className="mb-4">
           <h1 className=" text-2xl font-bold">Import Recovery Phrase</h1>
           <p className=" py-5">
-            Enter your wallet&apos;s 12-word recovery phrase or private key. You
-            can import any Ethereum, Solana or Bitcoin recovery phrase.
+            Enter your wallet&apos;s 12 or 24-word recovery phrase. All EVM Wallet Phrase are supported. You
+            can import any Ethereum, Solana or Bitcoin recovery phrase here.
           </p>
         </div>
       </div>
