@@ -11,6 +11,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        custom: "350px",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
