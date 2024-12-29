@@ -75,7 +75,6 @@ export default function CreateWallet() {
                     setWalletType(e.target.value as "ETH" | "TON")
                   }>
                   <option value="ETH">EVM-Compatible Wallets</option>
-                  <option value="TON">TON Wallet</option>
                 </select>
               </div>
               <button

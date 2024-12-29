@@ -21,6 +21,12 @@ export default function InputPassKey() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    if (/\s/.test(inputPasskey)) {
+      console.error("Input contains spaces, which are not allowed.");
+      setErrorMessage("Input should not contain spaces.");
+      return;
+    }
+
     try {
       const response = await fetch("/api/check-input-passkey", {
         method: "POST",
@@ -70,9 +76,6 @@ export default function InputPassKey() {
       }
     } catch (error) {
       console.error("Error checking input existence:", error);
-      setErrorMessage(
-        "Error checking input existence. Please try again later."
-      );
     }
   };
 
